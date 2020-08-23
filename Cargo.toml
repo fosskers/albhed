@@ -3,5 +3,10 @@ name = "albhed"
 version = "0.1.0"
 authors = ["Colin Woodbury <colin@fosskers.ca>"]
 edition = "2018"
-
-[dependencies]
+description = "A translator for the Al Bhed language."
+homepage = "https://github.com/fosskers/albhed"
+repository = "https://github.com/fosskers/albhed"
+readme = "README.md"
+license = "MIT"
+keywords = ["localization"]
+categories = ["localization"]
