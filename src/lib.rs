@@ -8,13 +8,21 @@
 //!
 //! # Usage
 //!
+//! Converting Al Bhed into English:
 //! ```
 //! let al_bhed = "Oui yvnyet uv dra cay?";
 //! let english = al_bhed.chars().filter_map(albhed::from_al_bhed).collect::<String>();
 //! assert_eq!("You afraid of the sea?", english);
 //! ```
+//!
+//! Converting English into Al Bhed:
+//! ```
+//! let english = "Beware of Sandstorms!";
+//! let al_bhed = english.chars().filter_map(albhed::to_al_bhed).collect::<String>();
+//! assert_eq!("Pafyna uv Cyhtcdunsc!", al_bhed);
+//! ```
 
-// TODO Make sure whitespace and punctuation are handled correctly.
+#![doc(html_root_url = "https://docs.rs/albhed/0.1.0")]
 
 /// The ordering that Al Bhed letters map into English. For instance, `A` in Al
 /// Bhed maps to the English `E`.
@@ -23,17 +31,33 @@ const AL_BHED: [char; 26] = [
     'D', 'O', 'F', 'Z', 'Q', 'A', 'J',
 ];
 
+/// The ordering that English letters map into Al Bhed. For instance, `Y` in Al
+/// Bhed maps to the English `A`.
+const ENGLISH: [char; 26] = [
+    'Y', 'P', 'L', 'T', 'A', 'V', 'K', 'R', 'E', 'Z', 'G', 'M', 'S', 'H', 'U', 'B', 'X', 'N', 'C',
+    'D', 'I', 'J', 'F', 'Q', 'O', 'W',
+];
+
 /// Convert a single `char` from Al Bhed into English.
 pub fn from_al_bhed(c: char) -> Option<char> {
+    work(&AL_BHED, c)
+}
+
+/// Convert a single `char` from English into Al Bhed.
+pub fn to_al_bhed(c: char) -> Option<char> {
+    work(&ENGLISH, c)
+}
+
+fn work(table: &[char; 26], c: char) -> Option<char> {
     match c {
         _ if c.is_ascii_whitespace() || c.is_ascii_digit() || c.is_ascii_punctuation() => Some(c),
         _ if c.is_ascii_alphabetic() => {
             let index: usize = (c.to_digit(36).unwrap() - 10) as usize;
-            let eng = AL_BHED[index];
+            let trans = table[index];
             if c.is_ascii_lowercase() {
-                Some(eng.to_ascii_lowercase())
+                Some(trans.to_ascii_lowercase())
             } else {
-                Some(eng)
+                Some(trans)
             }
         }
         _ => None,
@@ -45,7 +69,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn from_test() {
+    fn conversions() {
         let pairs = vec![
             ("Fryd ec drec?", "What is this?"),
             ("Fa gemm ed?", "We kill it?"),
@@ -54,8 +78,11 @@ mod tests {
         ];
 
         pairs.into_iter().for_each(|(ab, eng)| {
-            let trans: String = ab.chars().filter_map(from_al_bhed).collect();
-            assert_eq!(eng, trans);
+            let al_bhed: String = ab.chars().filter_map(from_al_bhed).collect();
+            assert_eq!(eng, al_bhed);
+
+            let english: String = eng.chars().filter_map(to_al_bhed).collect();
+            assert_eq!(ab, english);
         });
     }
 }
