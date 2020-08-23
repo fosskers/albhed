@@ -1,3 +1,5 @@
+[![Workflow Status](https://github.com/fosskers/albhed/workflows/Rust/badge.svg)](https://github.com/fosskers/albhed/actions?query=workflow%3A%22Rust%22)
+
 # albhed
 
 A translator for the Al Bhed language.

@@ -10,3 +10,6 @@ readme = "README.md"
 license = "MIT"
 keywords = ["localization"]
 categories = ["localization"]
+
+[badges]
+github = { repository = "fosskers/albhed", branch = "master", workflow = "Rust" }
